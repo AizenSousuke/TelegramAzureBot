@@ -13,19 +13,18 @@ BOT.start((ctx) => ctx.reply("Welcome to the Misaka Network."));
 // Echo
 // BOT.on("message", (ctx) => ctx.telegram.sendMessage(ctx.chat.id, ctx.message));
 
-// Complete command
-BOT.command("complete", async (ctx) => {
+BOT.on("message", async (ctx) => {
 	const chatId = ctx.chat.id;
-	const prompt = RemoveCommand(ctx.message.text);
+	// const prompt = RemoveCommand(ctx.message.text);
 	const response = await openai
 		.OPEN_AI()
-		.createCompletion(completion.CompletionModel({ prompt: prompt }));
+		.createCompletion(completion.CompletionModel({ prompt: ctx.message.text }));
 
 	if (response) {
-		ctx.telegram.sendMessage(chatId, response.data.choices[0].text);
+		await ctx.telegram.sendMessage(chatId, response.data.choices[0].text);
 	}
 });
 
 module.exports = async function (context, req) {
-	return BOT.handleUpdate(req.body, context.res);
+	return await BOT.handleUpdate(req.body, context.res);
 };
