@@ -11,7 +11,7 @@ const BOT = new Telegraf(process.env.TELEGRAM_BOT_TOKEN, {
 });
 
 BOT.telegram.setWebhook(process.env.WEBHOOK_URL);
-// BOT.start((ctx) => ctx.reply("Welcome to the Misaka Network."));
+BOT.start((ctx) => ctx.reply("Welcome to the Misaka Network."));
 // Echo
 // BOT.on("message", (ctx) => ctx.telegram.sendMessage(ctx.chat.id, ctx.message));
 
