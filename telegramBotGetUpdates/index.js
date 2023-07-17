@@ -17,12 +17,14 @@ BOT.telegram.setWebhook(process.env.WEBHOOK_URL);
 
 BOT.on("message", async (ctx) => {
 	const chatId = ctx.chat.id;
+	ctx.log(chatId);
 	// const prompt = RemoveCommand(ctx.message.text);
 	const response = await openai
 		.OPEN_AI()
 		.createCompletion(
 			completion.CompletionModel({ prompt: ctx.message.text })
 		);
+	ctx.log(response);
 
 	if (response) {
 		await ctx.telegram.sendMessage(chatId, response.data.choices[0].text);
