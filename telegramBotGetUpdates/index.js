@@ -17,27 +17,38 @@ BOT.start((ctx) => ctx.reply("Welcome to the Misaka Network."));
 
 BOT.on("message", async (ctx) => {
 	const chatId = ctx.chat.id;
-	ctx.log(chatId);
-	// const prompt = RemoveCommand(ctx.message.text);
-	const response = await openai
-		.OPEN_AI()
-		.createCompletion(
-			completion.CompletionModel({ prompt: ctx.message.text })
+	try {
+		// const prompt = RemoveCommand(ctx.message.text);
+		const response = await openai.OPEN_AI().createCompletion(
+			completion.CompletionModel({
+				model: "gpt-3.5-turbo",
+				prompt: ctx.message.text,
+			})
 		);
-	ctx.log(response);
 
-	if (response) {
-		await ctx.telegram.sendMessage(chatId, response.data.choices[0].text);
+		if (response) {
+			await ctx.telegram.sendMessage(
+				chatId,
+				response.data?.choices[0].text
+			);
+		}
+	} catch (error) {
+		await ctx.telegram.sendMessage(
+			chatId,
+			"AI has detected something wrong with your message." + error
+		);
 	}
 });
 
 module.exports = async function (context, req) {
 	try {
+		context.log("Handling update");
 		return await BOT.handleUpdate(req.body, context.res);
 	} catch (error) {
+		context.log("Error: " + error);
 		return {
 			statusCode: 500,
-			body: error
-		}
+			body: error,
+		};
 	}
 };
